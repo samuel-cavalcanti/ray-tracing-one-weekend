@@ -14,7 +14,6 @@ cargo r --example=first_image
 ![expected](https://raytracing.github.io/images/img-1.01-first-ppm-image.png)
 **expected image**
 
-
 ## Rays, a Simple Camera, and Background
 
 blue to white

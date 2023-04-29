@@ -1,4 +1,4 @@
-use crate::{Vec3, Point3};
+use crate::{Vec3, Point3, Float};
 
 pub struct Ray {
     pub origin: Vec3,
@@ -15,7 +15,7 @@ impl Ray {
         }
     }
 
-    pub fn at(&self,t:f32)->Point3{
+    pub fn at(&self,t:Float)->Point3{
         
         self.origin +  t*self.direction
     }

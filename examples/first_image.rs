@@ -1,4 +1,4 @@
-use ray_tracing_one_weekend::{Color, write_color};
+use ray_tracing_one_weekend::{Color,Float, write_color};
 
 fn main() {
     let image_width = 256;
@@ -12,8 +12,9 @@ fn main() {
     for j in (0..image_height).rev() {
         progress_bar.inc(1);
         for i in 0..image_width {
-            let r = i as f32 / (last_index_height as f32);
-            let g = j as f32 / (last_index_width as f32);
+            let r = i as Float / (last_index_height as Float);
+            let g = j as Float / (last_index_width as Float);
+
             let b = 0.25;
             let color = Color::new(r,g,b);
             

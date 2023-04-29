@@ -1,35 +1,39 @@
 use std::ops;
 
+use crate::Float;
+
+
+
 #[derive(Copy,Clone)]
 pub struct Vec3 {
-    pub slice: [f32; 3],
+    pub slice: [Float; 3],
 }
 
 impl Vec3 {
-    pub fn new(e0: f32, e1: f32, e2: f32) -> Vec3 {
+    pub fn new(e0: Float, e1: Float, e2: Float) -> Vec3 {
         Vec3 {
             slice: [e0, e1, e2],
         }
     }
 
-    pub fn x(&self) -> f32 {
+    pub fn x(&self) -> Float {
         self.slice[0]
     }
 
-    pub fn y(&self) -> f32 {
+    pub fn y(&self) -> Float {
         self.slice[1]
     }
 
-    pub fn z(&self) -> f32 {
+    pub fn z(&self) -> Float {
         self.slice[2]
     }
 
-    pub fn lenght_squared(&self) -> f32 {
+    pub fn lenght_squared(&self) -> Float {
         self.slice[0] * self.slice[0]
             + self.slice[1] * self.slice[1]
             + self.slice[2] * self.slice[2]
     }
-    pub fn lenght(&self) -> f32 {
+    pub fn lenght(&self) -> Float {
         self.lenght_squared().sqrt()
     }
 }
@@ -52,16 +56,16 @@ impl ops::AddAssign for Vec3 {
     }
 }
 
-impl ops::MulAssign<f32> for Vec3 {
-    fn mul_assign(&mut self, rhs: f32) {
+impl ops::MulAssign<Float> for Vec3 {
+    fn mul_assign(&mut self, rhs: Float) {
         self.slice[0] *= rhs;
         self.slice[1] *= rhs;
         self.slice[2] *= rhs;
     }
 }
 
-impl ops::DivAssign<f32> for Vec3 {
-    fn div_assign(&mut self, rhs: f32) {
+impl ops::DivAssign<Float> for Vec3 {
+    fn div_assign(&mut self, rhs: Float) {
         self.slice[0] /= rhs;
         self.slice[1] /= rhs;
         self.slice[2] /= rhs;
@@ -69,7 +73,7 @@ impl ops::DivAssign<f32> for Vec3 {
 }
 
 impl ops::Index<usize> for Vec3 {
-    type Output = f32;
+    type Output = Float;
 
     fn index(&self, index: usize) -> &Self::Output {
         &self.slice[index]
@@ -104,10 +108,10 @@ impl ops::Sub<Vec3> for Vec3 {
     }
 }
 
-impl ops::Mul<f32> for Vec3 {
+impl ops::Mul<Float> for Vec3 {
     type Output = Vec3;
 
-    fn mul(self, rhs: f32) -> Self::Output {
+    fn mul(self, rhs: Float) -> Self::Output {
         Vec3 {
             slice: [
                 self.slice[0] * rhs,
@@ -132,7 +136,7 @@ impl ops::Mul<Vec3> for Vec3 {
     }
 }
 
-impl ops::Mul<Vec3> for f32 {
+impl ops::Mul<Vec3> for Float {
     type Output= Vec3;
 
     fn mul(self, rhs: Vec3) -> Self::Output {
@@ -140,10 +144,10 @@ impl ops::Mul<Vec3> for f32 {
     }
 }
 
-impl ops::Mul<(f32, Vec3)> for Vec3 {
+impl ops::Mul<(Float, Vec3)> for Vec3 {
     type Output = Vec3;
 
-    fn mul(self, rhs: (f32, Vec3)) -> Self::Output {
+    fn mul(self, rhs: (Float, Vec3)) -> Self::Output {
         Vec3 {
             slice: [
                 self.slice[0] * rhs.0 * rhs.1.slice[0],
@@ -154,10 +158,10 @@ impl ops::Mul<(f32, Vec3)> for Vec3 {
     }
 }
 
-impl ops::Mul<(Vec3, f32)> for Vec3 {
+impl ops::Mul<(Vec3, Float)> for Vec3 {
     type Output = Vec3;
 
-    fn mul(self, rhs: (Vec3, f32)) -> Self::Output {
+    fn mul(self, rhs: (Vec3, Float)) -> Self::Output {
         Vec3 {
             slice: [
                 self.slice[0] * rhs.1 * rhs.0.slice[0],
@@ -168,10 +172,10 @@ impl ops::Mul<(Vec3, f32)> for Vec3 {
     }
 }
 
-impl ops::Div<f32> for Vec3 {
+impl ops::Div<Float> for Vec3 {
     type Output = Vec3;
 
-    fn div(self, rhs: f32) -> Self::Output {
+    fn div(self, rhs: Float) -> Self::Output {
         Vec3 {
             slice: [
                 self.slice[0] / rhs,
@@ -181,7 +185,7 @@ impl ops::Div<f32> for Vec3 {
         }
     }
 }
-pub fn dot(u: &Vec3, v: &Vec3) -> f32 {
+pub fn dot(u: &Vec3, v: &Vec3) -> Float {
     u.slice[0] * v.slice[0] + u.slice[1] * v.slice[1] + u.slice[2] * v.slice[2]
 }
 
