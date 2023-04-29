@@ -1,30 +1,26 @@
-
 fn main() {
     let image_width = 256;
     let image_height = 256;
 
-    print!("P3\n {image_width} {image_height} \n255\n");
-    
+    let mut imgbuf = image::ImageBuffer::new(image_width, image_height);
 
-    let normalize = |v| (v * 255.999) as i32;
+    let normalize = |v| (v * 255.999) as u8;
 
-    for j in (0..image_height).rev(){
-    
-        for i in 0..image_width{
-
-            let r =  i as f32 / (image_width as f32  -1.0);
-            let g =  j as f32 / (image_height as f32  -1.0);
+    let last_index_height = image_height - 1;
+    let last_index_width = image_width - 1;
+    for j in (0..image_height).rev() {
+        for i in 0..image_width {
+            let r = i as f32 / (last_index_height as f32);
+            let g = j as f32 / (last_index_width as f32);
             let b = 0.25;
-            
-            let ir =  normalize(r);
-            let ig =  normalize(g);
-            let ib =  normalize(b);
 
-            print!("{ir} {ig} {ib}\n");
+            let ir = normalize(r);
+            let ig = normalize(g);
+            let ib = normalize(b);
+
+            imgbuf[(i, last_index_height - j)] = image::Rgb([ir, ig, ib]);
         }
     }
 
-   
-    
-
+    imgbuf.save("tests/first_image/image.png").unwrap();
 }
