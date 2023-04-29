@@ -5,10 +5,12 @@ fn main() {
     let image_height = 256;
 
     let mut imgbuf = image::ImageBuffer::new(image_width, image_height);
-
+    
+    let progress_bar = indicatif::ProgressBar::new(image_height.into());
     let last_index_height = image_height - 1;
     let last_index_width = image_width - 1;
     for j in (0..image_height).rev() {
+        progress_bar.inc(1);
         for i in 0..image_width {
             let r = i as f32 / (last_index_height as f32);
             let g = j as f32 / (last_index_width as f32);
@@ -18,6 +20,7 @@ fn main() {
             write_color(&mut imgbuf[(i, last_index_height - j)],color);
         }
     }
-
-    imgbuf.save("tests/first_image/image.png").unwrap();
+    
+    progress_bar.finish_with_message("done");
+    imgbuf.save("images/first_image.png").unwrap();
 }
