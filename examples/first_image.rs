@@ -1,10 +1,10 @@
+use ray_tracing_one_weekend::{Color, write_color};
+
 fn main() {
     let image_width = 256;
     let image_height = 256;
 
     let mut imgbuf = image::ImageBuffer::new(image_width, image_height);
-
-    let normalize = |v| (v * 255.999) as u8;
 
     let last_index_height = image_height - 1;
     let last_index_width = image_width - 1;
@@ -13,12 +13,9 @@ fn main() {
             let r = i as f32 / (last_index_height as f32);
             let g = j as f32 / (last_index_width as f32);
             let b = 0.25;
-
-            let ir = normalize(r);
-            let ig = normalize(g);
-            let ib = normalize(b);
-
-            imgbuf[(i, last_index_height - j)] = image::Rgb([ir, ig, ib]);
+            let color = Color::new(r,g,b);
+            
+            write_color(&mut imgbuf[(i, last_index_height - j)],color);
         }
     }
 
