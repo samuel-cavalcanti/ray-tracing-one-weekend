@@ -1,6 +1,9 @@
-use ray_tracing_one_weekend::{vec3, write_color, Color,Float, Point3, Ray, Vec3};
+use ray_tracing_one_weekend::{vec3, write_color, Color, Float, Point3, Ray, Vec3};
 
-pub fn ray_color(ray: &Ray) -> Color {
+fn ray_color(ray: &Ray) -> Color {
+    if hit_sphere(Point3::new(0.0, 0.0, -1.0), 0.5, ray) {
+        return Color::new(1.0, 0.0, 0.0);
+    }
     let unit_direction = vec3::unit_vector(&ray.direction);
 
     let t = 0.5 * (unit_direction.y() + 1.0);
@@ -11,6 +14,24 @@ pub fn ray_color(ray: &Ray) -> Color {
 
     (1.0 - t) * white + t * blue
 }
+
+fn hit_sphere(center: Point3, radius: Float, ray: &Ray) -> bool {
+    // t²b⋅b + 2tb⋅(A−C)+(A−C)⋅(A−C)−r²=0 (quadratic equation)
+    // Where b  is ray direction,
+    // A is the ray origin,
+    // C is the sphere center
+    // r is the sphere  radius
+    let oc = ray.origin - center;
+    // solving the ax² + bx + c = 0 equation
+    let a = ray.direction.lenght_squared();
+    let b = 2.0 * vec3::dot(&oc, &ray.direction);
+    let c = oc.lenght_squared() - radius * radius;
+
+    let discriminant = b * b - 4.0 * a * c;
+
+    discriminant > 0.0
+}
+
 fn main() {
     // Image
     let image_width = 400;
@@ -43,10 +64,7 @@ fn main() {
 
             let ray_direction = lower_left_corner + u * horizontal + v * vertical - origin;
 
-            let ray = Ray::new(
-                origin,
-                ray_direction,
-            );
+            let ray = Ray::new(origin, ray_direction);
             let color = ray_color(&ray);
 
             write_color(&mut imgbuf[(i, last_index_height - j)], color);
@@ -54,6 +72,5 @@ fn main() {
     }
     progress_bar.finish_with_message("done");
 
-    imgbuf.save("images/first_ray.png").unwrap();
-
+    imgbuf.save("images/red_sphere.png").unwrap();
 }
