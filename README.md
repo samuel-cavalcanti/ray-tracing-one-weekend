@@ -1,6 +1,7 @@
 # Ray Tracing in One Weekend
 
 ## Output an Image
+
 creating the first image
 
 ```bash
@@ -16,13 +17,13 @@ cargo r --example=first_image
 
 ## Rays, a Simple Camera, and Background
 
+blue to white
 
 ```bash
 cargo r --example=first_ray
 ```
 
-
-![first image](images/first_image.png)
+![first image](images/first_ray.png)
 **first ray**
 
 ![expected](https://raytracing.github.io/images/img-1.02-blue-to-white.png)
