@@ -49,3 +49,13 @@ cargo r --release --example=normals_on_a_sphere_with_groud
 Surface Normals With Ground                     |  expected
 :-------------------------:|:---------:
 ![Surface Normals With Ground ](images/normal_on_sphere_with_ground.png) |  ![Expected Surface Normals With Ground](https://raytracing.github.io/images/img-1.05-normals-sphere-ground.png)
+
+## Antialiasing
+
+```bash
+cargo r --release --example=antialiasing
+```
+
+without antialiasing         |  with antialiasing
+:-------------------------:|:---------:
+![without antialiasing](images/normal_on_sphere_with_ground.png) |  ![antialiasing](images/antialiasing.png)
