@@ -129,12 +129,16 @@ fn test_images() -> Result<(), image::ImageError> {
         "images/first_image.png",
         "images/first_ray.png",
         "images/red_sphere.png",
+        "images/normal_on_sphere.png",
+        "images/normal_on_sphere_with_ground.png",
     ];
 
     let expected_images_path = vec![
         "images/img-1.01-first-ppm-image.png",
         "images/img-1.02-blue-to-white.png",
         "images/img-1.03-red-sphere.png",
+        "images/img-1.04-normals-sphere.png",
+        "images/img-1.05-normals-sphere-ground.png",
     ];
 
     assert_eq!(images_path.len(), expected_images_path.len());
