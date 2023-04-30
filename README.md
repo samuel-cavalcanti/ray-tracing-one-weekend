@@ -110,6 +110,19 @@ cargo r --release --example=fuzzed_metal
 :-------------------------:|:-------:|
 ![ Shiny metal](images/refraction.png) | ![fizzed metal](images/refraction_sometimes.png)
 
-|A hollow glass sphere|
-:-------------------------:|
-|![A hollow glass sphere](images/hollow_glass_sphere.png)|
+|A hollow glass sphere| Expected|
+:-------------------------:|:------------|
+|![A hollow glass sphere](images/hollow_glass_sphere.png)|![expected](https://raytracing.github.io/images/img-1.16-glass-hollow.png)
+
+## Camera
+
+|A distant view| expected A distant view|
+:-------------------------:|:-------:|
+![ A distant view](images/distance_view.png) | ![expected A distant view](https://raytracing.github.io/images/img-1.18-view-distant.png)
+
+|zoom in| expected zoom in|
+:-------------------------:|:-------:|
+![zoom in](images/zoom_in.png) | ![expected A distant view](https://raytracing.github.io/images/img-1.19-view-zoom.png)
+
+
+## Defocus Blur

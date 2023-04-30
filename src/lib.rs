@@ -14,6 +14,7 @@ pub use vec3::Vec3;
 pub type Float = f64;
 pub type Color = Vec3;
 pub type Point3 = Vec3;
+pub const PI:Float = 3.14159265358979323846264338327950288;
 
 use rand::distributions::Distribution;
 

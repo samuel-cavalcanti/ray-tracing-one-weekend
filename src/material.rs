@@ -1,4 +1,4 @@
-use crate::{vec3, Color, Float, HitRecord, Ray, Vec3};
+use crate::{vec3, Color, Float, HitRecord, Ray, Vec3, random};
 
 pub trait Material {
     fn scatter(&self, ray_in: &Ray, hit_rec: &HitRecord) -> Option<MaterialRecord>;
@@ -62,7 +62,10 @@ impl Material for Metal {
         let unit = vec3::unit_vector(&ray_in.direction);
         let reflected = vec3::reflect(&unit, &hit_rec.normal);
 
-        let ray_direction = reflected + self.fuzzy * vec3::random_in_init_sphere();
+        let ray_direction = match self.fuzzy == 0.0 {
+            true => reflected,
+            false => reflected + self.fuzzy * vec3::random_in_init_sphere(),
+        };
 
         match vec3::dot(&ray_direction, &hit_rec.normal) > 0.0 {
             true => Some(MaterialRecord {
@@ -84,18 +87,17 @@ impl Dielectric {
             index_of_refraction,
         }
     }
+
+    fn schlicks_approx(cos_theta:Float,refraction:Float)->Float{
+        
+        let r_0 = (1.0 - refraction)/(1.0+refraction);
+
+        let r_0 =  r_0*r_0;
+
+        r_0 + (1.0-r_0)*Float::powi(1.0-cos_theta,5)
+    }
 }
 
-fn refract(uv: &Vec3, n: &Vec3, etai_over_etat: Float) -> Vec3 {
-    let uv = *uv;
-    let uv_2 = -uv;
-    let cost_theta = Float::min(vec3::dot(&uv_2, n), 1.0);
-
-    let r_out_perp = etai_over_etat * (uv + cost_theta * n);
-    let r_out_parallel = -Float::sqrt(Float::abs(1.0 - r_out_perp.lenght_squared())) * n;
-
-    r_out_perp + r_out_parallel
-}
 
 impl Material for Dielectric {
     fn scatter(&self, ray_in: &Ray, hit_rec: &HitRecord) -> Option<MaterialRecord> {
@@ -112,6 +114,7 @@ impl Material for Dielectric {
         let sin_theta = Float::sqrt(1.0 - cost_theta * cost_theta);
 
         let can_refract = refraction_radio * sin_theta <= 1.0;
+        let reflectance = Self::schlicks_approx(cost_theta,refraction_radio);
 
         let refract = || {
             let r_out_perp = refraction_radio * (unit_direction + cost_theta * hit_rec.normal);
@@ -121,7 +124,7 @@ impl Material for Dielectric {
             r_out_perp + r_out_parallel
         };
 
-        let direction = match can_refract {
+        let direction = match can_refract && reflectance <= random() {
             true => refract(),
             false => vec3::reflect(&unit_direction,&hit_rec.normal),
         };

@@ -1,9 +1,9 @@
 use std::rc::Rc;
 
 use ray_tracing_one_weekend::{
-    material::{Lambertian, Metal, Dielectric},
+    material::{Dielectric, Lambertian, Metal},
     random, vec3, write_color_wih_gamma_correction, Camera, Color, Float, HitRecord, Hittable,
-    Point3, Ray, Sphere,
+    Point3, Ray, Sphere,  Vec3,
 };
 
 fn hit_anything<H: Hittable>(ray: &Ray, world: &Vec<H>) -> Option<HitRecord> {
@@ -55,20 +55,29 @@ fn main() {
     let mut imgbuf = image::ImageBuffer::new(image_width, image_height);
 
     // World
+
     let mateiral_ground = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
     let mateiral_center = Rc::new(Lambertian::new(Color::new(0.1, 0.2, 0.5)));
-    let mateiral_left =  Rc::new(Dielectric::new(1.5));
+    let mateiral_left = Rc::new(Dielectric::new(1.5));
     let mateiral_right = Rc::new(Metal::with_fuzzy(Color::new(0.8, 0.6, 0.2), 0.0));
+
     let world = vec![
         Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, mateiral_ground),
         Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, mateiral_center),
-        Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mateiral_left),
+        Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mateiral_left.clone()),
+        Sphere::new(Point3::new(-1.0, 0.0, -1.0), -0.4, mateiral_left),
         Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, mateiral_right),
     ];
 
     // Camera
 
-    let camera = Camera::default();
+    let camera = Camera::field_of_view(
+        Point3::new(-2.0, 2.0, 1.0),
+        Point3::new(0.0, 0.0, -1.0),
+        Vec3::new(0.0, 1.0, 0.0),
+        20.0,
+        aspect_ratio,
+    );
 
     //render
     let progress_bar = indicatif::ProgressBar::new(image_height.into());
@@ -97,5 +106,5 @@ fn main() {
     }
     progress_bar.finish_with_message("done");
 
-    imgbuf.save("images/refraction_sometimes.png").unwrap();
+    imgbuf.save("images/hollow_glass_sphere.png").unwrap();
 }
