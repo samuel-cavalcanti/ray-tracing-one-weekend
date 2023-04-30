@@ -1,3 +1,5 @@
+use std::ops::Range;
+
 use crate::{vec3, Float, HitRecord, Hittable, Point3, Ray};
 
 pub struct Sphere {
@@ -12,7 +14,7 @@ impl Sphere {
 }
 
 impl Hittable for Sphere {
-    fn hit(&self, ray: &Ray, t_min: Float, t_max: Float) -> Option<HitRecord> {
+    fn hit(&self, ray: &Ray, interval:Range<Float>) -> Option<HitRecord> {
         // t²b⋅b + 2tb⋅(A−C)+(A−C)⋅(A−C)−r²=0 (quadratic equation)
         // Where b  is ray direction,
         // A is the ray origin,
@@ -30,13 +32,15 @@ impl Hittable for Sphere {
             return None;
         }
 
+
         let sqrtd = discriminant.sqrt();
 
         let root_a = (-half_b - sqrtd) / a;
 
         let root_b = (-half_b + sqrtd) / a;
 
-        let is_in_interval = |root| t_min <= root && root <= t_max;
+        //let is_out_interval = |root| root <= t_min || t_max <= root;
+
 
         let make_record = |root| {
             let p = ray.at(root);
@@ -44,15 +48,10 @@ impl Hittable for Sphere {
             HitRecord::form_sphere(p, root, outward_normal, &ray.direction)
         };
         
-
-        if is_in_interval(root_a) {
-            return Some(make_record(root_a));
+        match (interval.contains(&root_a),interval.contains(&root_b)){
+            (false, false) => None,
+            (false, true) => Some(make_record(root_b)) ,
+            (true, _) => Some(make_record(root_a)),
         }
-
-        if is_in_interval(root_b) {
-            return Some(make_record(root_b));
-        }
-
-        None
     }
 }

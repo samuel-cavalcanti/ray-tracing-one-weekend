@@ -1,10 +1,8 @@
 use std::ops;
 
-use crate::Float;
+use crate::{random_in_interval, Float};
 
-
-
-#[derive(Copy,Clone)]
+#[derive(Copy, Clone)]
 pub struct Vec3 {
     pub slice: [Float; 3],
 }
@@ -36,6 +34,39 @@ impl Vec3 {
     pub fn lenght(&self) -> Float {
         self.lenght_squared().sqrt()
     }
+}
+
+pub fn random_in_init_sphere() -> Vec3 {
+    let min = -1.0;
+    let max = 1.0;
+    let random_vec = || Vec3 {
+        slice: [
+            random_in_interval(min, max),
+            random_in_interval(min, max),
+            random_in_interval(min, max),
+        ],
+    };
+
+    let mut vec = random_vec();
+
+    while vec.lenght_squared() >= 1.0 {
+        vec = random_vec();
+    }
+
+    vec
+}
+pub fn random_unit_vector() -> Vec3 {
+    let v = random_in_init_sphere();
+    unit_vector(&v)
+}
+
+pub fn random_unit_hemisphere(normal:&Vec3)->Vec3{
+ let unit = random_in_init_sphere();
+
+ match dot(&unit,normal)> 0.0 {
+    true => unit,
+    false => -unit,
+}
 }
 
 impl ops::Neg for Vec3 {
@@ -137,10 +168,10 @@ impl ops::Mul<Vec3> for Vec3 {
 }
 
 impl ops::Mul<Vec3> for Float {
-    type Output= Vec3;
+    type Output = Vec3;
 
     fn mul(self, rhs: Vec3) -> Self::Output {
-        rhs*self
+        rhs * self
     }
 }
 
@@ -199,7 +230,7 @@ pub fn cross(u: &Vec3, v: &Vec3) -> Vec3 {
     }
 }
 
-pub fn unit_vector(v:&Vec3)->Vec3{
-   let lenght = v.lenght(); 
+pub fn unit_vector(v: &Vec3) -> Vec3 {
+    let lenght = v.lenght();
     *v / lenght
 }

@@ -6,7 +6,7 @@ fn ray_color(ray: &Ray ) -> Color {
     let white = Color::new(1.0, 1.0, 1.0);
 
     let sphere = Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5);
-    if let Some(rec) = sphere.hit(ray, 0.0, Float::INFINITY) {
+    if let Some(rec) = sphere.hit(ray, 0.0..Float::INFINITY) {
         return 0.5 * (rec.normal + white);
     }
 

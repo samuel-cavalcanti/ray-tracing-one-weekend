@@ -7,7 +7,7 @@ fn hit_anything<H: Hittable>(ray: &Ray, world: &Vec<H>) -> Option<HitRecord> {
     let mut closed_so_far = Float::INFINITY;
 
     for hitable in world {
-        let hit = hitable.hit(ray, 0.0, closed_so_far);
+        let hit = hitable.hit(ray, 0.0..closed_so_far);
         if let Some(record) = hit {
             closed_so_far = record.t;
             last_hit = Some(record);
@@ -79,5 +79,7 @@ fn main() {
     }
     progress_bar.finish_with_message("done");
 
-    imgbuf.save("images/normal_on_sphere_with_ground.png").unwrap();
+    imgbuf
+        .save("images/normal_on_sphere_with_ground.png")
+        .unwrap();
 }

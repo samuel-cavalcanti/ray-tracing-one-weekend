@@ -1,5 +1,5 @@
 use image::{DynamicImage, GenericImageView};
-use ray_tracing_one_weekend::{vec3, Vec3};
+use ray_tracing_one_weekend::{vec3, Vec3, random, random_in_interval};
 
 #[test]
 fn test_utility_function_vec3() {
@@ -151,4 +151,39 @@ fn test_images() -> Result<(), image::ImageError> {
     }
 
     Ok(())
+}
+
+#[test]
+// becase of the issue https://github.com/RayTracing/raytracing.github.io/issues/875
+// this test should fail
+fn test_diffuse_sphere()-> Result<(), image::ImageError>{
+    let image_path  = 
+        "images/diffuse_material.png";
+    let expected_images_path = 
+        "images/img-1.07-first-diffuse.png";
+
+        let image = image::open(image_path)?;
+        let expected_image = image::open(expected_images_path)?;
+
+        test_image(image,expected_image);
+    Ok(())
+}
+
+#[test]
+fn test_random(){
+
+    for _ in 0..1000{
+        let value = random();
+        assert!(value >= 0.0);
+        assert!(value <= 1.0);
+
+        let min = -1.0;
+        let max = 1.0;
+        let value = random_in_interval(-1.0,1.0);
+
+        assert!(value >= min);
+        assert!(value <= max);
+
+    }
+
 }

@@ -8,7 +8,18 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn new() -> Camera {
+
+    pub fn get_ray(&self, u: Float, v: Float) -> Ray {
+        let ray_direction =
+            self.lower_left_corner + u * self.horizontal + v * self.vertical - self.origin;
+
+        Ray::new(self.origin, ray_direction)
+    }
+}
+
+impl Default for Camera{
+    fn default() -> Self {
+
         let aspect_ratio = 16.0 / 9.0;
         let viewport_height = 2.0;
         let viewport_width = aspect_ratio * viewport_height;
@@ -26,12 +37,5 @@ impl Camera {
             vertical,
             lower_left_corner,
         }
-    }
-
-    pub fn get_ray(&self, u: Float, v: Float) -> Ray {
-        let ray_direction =
-            self.lower_left_corner + u * self.horizontal + v * self.vertical - self.origin;
-
-        Ray::new(self.origin, ray_direction)
     }
 }

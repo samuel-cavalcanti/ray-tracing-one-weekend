@@ -59,3 +59,29 @@ cargo r --release --example=antialiasing
 without antialiasing         |  with antialiasing
 :-------------------------:|:---------:
 ![without antialiasing](images/normal_on_sphere_with_ground.png) |  ![antialiasing](images/antialiasing.png)
+
+## Diffuse Materials
+
+```bash
+cargo r --release --example=diffuse_materials
+```
+
+diffuse sphere         |  diffuse sphere with gamma correction
+:-------------------------:|:---------:
+![diffuse sphere](images/diffuse_material.png) |  ![antialiasing](images/diffuse_material_with_gamma.png)
+
+Rendering the lambertian sphere
+
+```bash
+cargo r --release --example=lambertian_sphere
+```
+
+Rendering the diffuse sphere with hemispherical scattering
+
+```bash
+cargo r --release --example=diffuse_sphere_with_hemispherical_scattering 
+```
+
+|Lambertian sphere| diffuse sphere with hemispherical scattering|
+:-------------------------:|:-------:|
+![ Lambertian sphere](images/lambertian_shpere.png) | ![diffuse spheres with hemispherical scattering](images/diffuse_sphere_with_hemispherical_scattering.png)
