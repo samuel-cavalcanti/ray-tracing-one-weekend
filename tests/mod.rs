@@ -161,7 +161,7 @@ fn test_images() -> Result<(), image::ImageError> {
 #[test]
 // becase of the issue https://github.com/RayTracing/raytracing.github.io/issues/875
 // this test should fail
-fn test_materials()-> Result<(), image::ImageError>{
+fn test_diffuse_materials()-> Result<(), image::ImageError>{
 
     let images_path = vec![
         "images/diffuse_material.png",

@@ -2,13 +2,14 @@ mod camera;
 mod hittable;
 mod ray;
 mod sphere;
+mod meterial;
 pub mod vec3;
 
+pub use camera::Camera;
 pub use hittable::{HitRecord, Hittable};
 pub use ray::Ray;
 pub use sphere::Sphere;
 pub use vec3::Vec3;
-pub use camera::Camera;
 
 pub type Float = f64;
 pub type Color = Vec3;
@@ -25,10 +26,9 @@ pub fn write_color(p: &mut image::Rgb<u8>, c: Color) {
 }
 
 pub fn write_color_wih_samples(p: &mut image::Rgb<u8>, c: Color, samples_per_pixel: Float) {
-
     let mut color = c;
     color /= samples_per_pixel;
-    
+
     let normalize = |v| (v * 256.0) as u8;
     let clamp = |v| {
         if v < 0.0 {
@@ -46,18 +46,21 @@ pub fn write_color_wih_samples(p: &mut image::Rgb<u8>, c: Color, samples_per_pix
     let ig = normalize(clamp(color[1]));
     let ib = normalize(clamp(color[2]));
 
-    *p = image::Rgb([ir,ig,ib]);
+    *p = image::Rgb([ir, ig, ib]);
 }
 
-pub fn write_color_wih_gamma_correction(p: &mut image::Rgb<u8>, c: Color, samples_per_pixel: Float) {
-
+pub fn write_color_wih_gamma_correction(
+    p: &mut image::Rgb<u8>,
+    c: Color,
+    samples_per_pixel: Float,
+) {
     let mut color = c;
     color /= samples_per_pixel;
 
     color.slice[0] = color.slice[0].sqrt();
     color.slice[1] = color.slice[1].sqrt();
     color.slice[2] = color.slice[2].sqrt();
-    
+
     let normalize = |v| (v * 256.0) as u8;
     let clamp = |v| {
         if v < 0.0 {
@@ -75,7 +78,7 @@ pub fn write_color_wih_gamma_correction(p: &mut image::Rgb<u8>, c: Color, sample
     let ig = normalize(clamp(color[1]));
     let ib = normalize(clamp(color[2]));
 
-    *p = image::Rgb([ir,ig,ib]);
+    *p = image::Rgb([ir, ig, ib]);
 }
 
 /// return random value between [0.0, 1.0]
@@ -87,6 +90,6 @@ pub fn random() -> Float {
 }
 
 /// return random value between [min, max]
-pub fn random_in_interval(min:Float,max:Float)->Float{
-   min + random()*(max - min)
+pub fn random_in_interval(min: Float, max: Float) -> Float {
+    min + random() * (max - min)
 }

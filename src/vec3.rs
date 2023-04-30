@@ -34,7 +34,15 @@ impl Vec3 {
     pub fn lenght(&self) -> Float {
         self.lenght_squared().sqrt()
     }
+
+    pub fn near_zero(&self) -> bool {
+        self.slice[0].abs() < PROX_ZERO
+            && self.slice[1].abs() < PROX_ZERO
+            && self.slice[2].abs() < PROX_ZERO
+    }
 }
+
+const PROX_ZERO: Float = 1e-8;
 
 pub fn random_in_init_sphere() -> Vec3 {
     let min = -1.0;
@@ -60,13 +68,13 @@ pub fn random_unit_vector() -> Vec3 {
     unit_vector(&v)
 }
 
-pub fn random_unit_hemisphere(normal:&Vec3)->Vec3{
- let unit = random_in_init_sphere();
+pub fn random_unit_hemisphere(normal: &Vec3) -> Vec3 {
+    let unit = random_in_init_sphere();
 
- match dot(&unit,normal)> 0.0 {
-    true => unit,
-    false => -unit,
-}
+    match dot(&unit, normal) > 0.0 {
+        true => unit,
+        false => -unit,
+    }
 }
 
 impl ops::Neg for Vec3 {
@@ -139,7 +147,28 @@ impl ops::Sub<Vec3> for Vec3 {
     }
 }
 
+impl ops::Sub<&Vec3> for &Vec3 {
+    type Output = Vec3;
+
+    fn sub(self, rhs: &Vec3) -> Self::Output {
+        (*self) - (*rhs)
+    }
+}
+
 impl ops::Mul<Float> for Vec3 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Float) -> Self::Output {
+        Vec3 {
+            slice: [
+                self.slice[0] * rhs,
+                self.slice[1] * rhs,
+                self.slice[2] * rhs,
+            ],
+        }
+    }
+}
+impl ops::Mul<Float> for &Vec3 {
     type Output = Vec3;
 
     fn mul(self, rhs: Float) -> Self::Output {
@@ -172,6 +201,14 @@ impl ops::Mul<Vec3> for Float {
 
     fn mul(self, rhs: Vec3) -> Self::Output {
         rhs * self
+    }
+}
+
+impl ops::Mul<&Vec3> for Float {
+    type Output = Vec3;
+
+    fn mul(self, rhs: &Vec3) -> Self::Output {
+        (*rhs) * self
     }
 }
 
@@ -233,4 +270,10 @@ pub fn cross(u: &Vec3, v: &Vec3) -> Vec3 {
 pub fn unit_vector(v: &Vec3) -> Vec3 {
     let lenght = v.lenght();
     *v / lenght
+}
+
+pub fn reflect(v: &Vec3, normal: &Vec3) -> Vec3 {
+    let normal = *normal;
+    let v = *v;
+    v - 2.0 * dot(&v, &normal) * normal
 }
