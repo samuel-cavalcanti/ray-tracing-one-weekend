@@ -1,4 +1,4 @@
-use crate::{vec3, Color, Float, HitRecord, Ray, Vec3, random};
+use crate::{vec3, Color, Float, HitRecord, Ray, Vec3};
 
 pub trait Material {
     fn scatter(&self, ray_in: &Ray, hit_rec: &HitRecord) -> Option<MaterialRecord>;
@@ -84,13 +84,17 @@ impl Dielectric {
             index_of_refraction,
         }
     }
+}
 
-    fn shlicks_approx(cosine:Float,refraction_index:Float)->Float{
-       let r_0 = (1.0-refraction_index)/ (1.0 + refraction_index); 
-       let r_0 = r_0*r_0;
+fn refract(uv: &Vec3, n: &Vec3, etai_over_etat: Float) -> Vec3 {
+    let uv = *uv;
+    let uv_2 = -uv;
+    let cost_theta = Float::min(vec3::dot(&uv_2, n), 1.0);
 
-       r_0 + (1.0-r_0)*Float::powi(1.0-cosine,5)
-    }
+    let r_out_perp = etai_over_etat * (uv + cost_theta * n);
+    let r_out_parallel = -Float::sqrt(Float::abs(1.0 - r_out_perp.lenght_squared())) * n;
+
+    r_out_perp + r_out_parallel
 }
 
 impl Material for Dielectric {
@@ -103,22 +107,22 @@ impl Material for Dielectric {
         };
 
         let unit_direction = vec3::unit_vector(&ray_in.direction);
-
-        let unit_direction_2 = -unit_direction;
-        let cost_theta = Float::min(vec3::dot(&unit_direction_2, &hit_rec.normal), 1.0);
+        let negative_unit = -unit_direction;
+        let cost_theta = Float::min(vec3::dot(&negative_unit, &hit_rec.normal), 1.0);
         let sin_theta = Float::sqrt(1.0 - cost_theta * cost_theta);
 
         let can_refract = refraction_radio * sin_theta <= 1.0;
-        let reflactance = Self::shlicks_approx(cost_theta,refraction_radio);
-        let direction = match can_refract && reflactance < random(){
-            true => {
-                // refract
-                let r_out_perp = refraction_radio * (unit_direction + cost_theta * hit_rec.normal);
-                let r_out_parallel =
-                    -Float::sqrt(Float::abs(1.0 - r_out_perp.lenght_squared())) * hit_rec.normal;
 
-                r_out_perp + r_out_parallel
-            }
+        let refract = || {
+            let r_out_perp = refraction_radio * (unit_direction + cost_theta * hit_rec.normal);
+            let r_out_parallel =
+                -Float::sqrt(Float::abs(1.0 - r_out_perp.lenght_squared())) * hit_rec.normal;
+
+            r_out_perp + r_out_parallel
+        };
+
+        let direction = match can_refract {
+            true => refract(),
             false => vec3::reflect(&unit_direction,&hit_rec.normal),
         };
 
