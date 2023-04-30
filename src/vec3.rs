@@ -63,6 +63,28 @@ pub fn random_in_init_sphere() -> Vec3 {
 
     vec
 }
+
+pub fn random_in_unit_disk()->Vec3{
+
+    let min = -1.0;
+    let max = 1.0;
+    let random_vec = || Vec3 {
+        slice: [
+            random_in_interval(min, max),
+            random_in_interval(min, max),
+            random_in_interval(0.0, 0.0),
+        ],
+    };
+
+    let mut v = random_vec();
+
+    while v.lenght_squared() >= 1.0{
+        v = random_vec();
+    }
+
+    v
+}
+
 pub fn random_unit_vector() -> Vec3 {
     let v = random_in_init_sphere();
     unit_vector(&v)

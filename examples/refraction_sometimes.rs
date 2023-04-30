@@ -65,18 +65,25 @@ fn main() {
         Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, mateiral_ground),
         Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, mateiral_center),
         Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mateiral_left.clone()),
-        Sphere::new(Point3::new(-1.0, 0.0, -1.0), -0.4, mateiral_left),
+        Sphere::new(Point3::new(-1.0, 0.0, -1.0), -0.45, mateiral_left),
         Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, mateiral_right),
     ];
 
     // Camera
+    let look_from =  Point3::new(3.0, 3.0, 2.0);
+    let look_at =  Point3::new(0.0, 0.0, -1.0);
+    let vup = Vec3::new(0.0,1.0,0.0);
+    let dist_focos = (look_from - look_at).lenght();
+    let aperture = 2.0;
 
     let camera = Camera::field_of_view(
-        Point3::new(-2.0, 2.0, 1.0),
-        Point3::new(0.0, 0.0, -1.0),
-        Vec3::new(0.0, 1.0, 0.0),
+        look_from,
+        look_at,
+        vup,
         20.0,
         aspect_ratio,
+        aperture,
+        dist_focos
     );
 
     //render
@@ -106,5 +113,5 @@ fn main() {
     }
     progress_bar.finish_with_message("done");
 
-    imgbuf.save("images/hollow_glass_sphere.png").unwrap();
+    imgbuf.save("images/spheres_with_depth_of_field.png").unwrap();
 }

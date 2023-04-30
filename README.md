@@ -114,7 +114,7 @@ cargo r --release --example=fuzzed_metal
 :-------------------------:|:------------|
 |![A hollow glass sphere](images/hollow_glass_sphere.png)|![expected](https://raytracing.github.io/images/img-1.16-glass-hollow.png)
 
-## Camera
+## Positionable Camera
 
 |A distant view| expected A distant view|
 :-------------------------:|:-------:|
@@ -124,5 +124,9 @@ cargo r --release --example=fuzzed_metal
 :-------------------------:|:-------:|
 ![zoom in](images/zoom_in.png) | ![expected A distant view](https://raytracing.github.io/images/img-1.19-view-zoom.png)
 
-
 ## Defocus Blur
+
+|Spheres with depth-of-field | expected |
+|:--------------------------:|:--------:|
+|![depth of field](images/spheres_with_depth_of_field.png)|![expected](https://raytracing.github.io/images/img-1.20-depth-of-field.png)
+
