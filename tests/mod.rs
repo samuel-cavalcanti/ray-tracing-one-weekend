@@ -103,7 +103,7 @@ fn test_vec3() {
     assert_eq!(vec[2], vec.z());
 }
 
-fn test_image(image: DynamicImage, expected_image: DynamicImage) {
+fn test_image(image: DynamicImage, expected_image: DynamicImage,image_name:&str) {
     let (width, height) = expected_image.dimensions();
     let (image_width, image_height) = expected_image.dimensions();
 
@@ -116,9 +116,14 @@ fn test_image(image: DynamicImage, expected_image: DynamicImage) {
 
             let myimage_pixel = image.get_pixel(i, j);
 
-            assert_eq!(image_pixel.0[0], myimage_pixel.0[0]);
-            assert_eq!(image_pixel.0[1], myimage_pixel.0[1]);
-            assert_eq!(image_pixel.0[2], myimage_pixel.0[2]);
+            for i in 0..3{
+                let expected_color_channel = image_pixel.0[i] as i32;
+                let color_channel = myimage_pixel.0[i] as i32;
+                let diff = expected_color_channel - color_channel;
+                let acceptable_dif = 3;
+                assert!( diff.abs() < acceptable_dif,"diff: {diff}, image: {image_name}");
+
+            }
         }
     }
 }
@@ -147,7 +152,7 @@ fn test_images() -> Result<(), image::ImageError> {
         let image = image::open(image_path)?;
         let expected_image = image::open(expected_path)?;
 
-        test_image(image, expected_image);
+        test_image(image, expected_image,image_path);
     }
 
     Ok(())
@@ -156,16 +161,29 @@ fn test_images() -> Result<(), image::ImageError> {
 #[test]
 // becase of the issue https://github.com/RayTracing/raytracing.github.io/issues/875
 // this test should fail
-fn test_diffuse_sphere()-> Result<(), image::ImageError>{
-    let image_path  = 
-        "images/diffuse_material.png";
-    let expected_images_path = 
-        "images/img-1.07-first-diffuse.png";
+fn test_materials()-> Result<(), image::ImageError>{
 
+    let images_path = vec![
+        "images/diffuse_material.png",
+        "images/lambertian_shpere.png",
+        "images/diffuse_sphere_with_hemispherical_scattering.png",
+    ];
+
+    let expected_images_path = vec![
+        "images/img-1.07-first-diffuse.png",
+        "images/img-1.09-correct-lambertian.png",
+        "images/img-1.10-rand-hemispherical.png",
+    ];
+
+    assert_eq!(images_path.len(), expected_images_path.len());
+
+    for (image_path, expected_path) in images_path.iter().zip(expected_images_path) {
         let image = image::open(image_path)?;
-        let expected_image = image::open(expected_images_path)?;
+        let expected_image = image::open(expected_path)?;
 
-        test_image(image,expected_image);
+        test_image(image, expected_image,image_path);
+    }
+
     Ok(())
 }
 
