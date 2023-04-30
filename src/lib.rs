@@ -2,7 +2,7 @@ mod camera;
 mod hittable;
 mod ray;
 mod sphere;
-pub mod meterial;
+pub mod material;
 pub mod vec3;
 
 pub use camera::Camera;

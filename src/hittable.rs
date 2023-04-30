@@ -1,6 +1,6 @@
 use std::{ops::Range, rc::Rc};
 
-use crate::{ Float, Point3, Ray, Vec3, meterial::Material};
+use crate::{ Float, Point3, Ray, Vec3, material::Material};
 
 pub struct HitRecord {
     pub p: Point3,

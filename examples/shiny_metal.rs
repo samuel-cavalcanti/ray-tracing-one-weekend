@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 use ray_tracing_one_weekend::{
-    meterial::{Lambertian, Metal},
+    material::{Lambertian, Metal},
     random, vec3, write_color_wih_gamma_correction, Camera, Color, Float, HitRecord, Hittable,
     Point3, Ray, Sphere,
 };

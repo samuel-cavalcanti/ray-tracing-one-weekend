@@ -1,6 +1,6 @@
 use std::{ops::Range, rc::Rc};
 
-use crate::{meterial::Material, vec3, Float, HitRecord, Hittable, Point3, Ray};
+use crate::{material::Material, vec3, Float, HitRecord, Hittable, Point3, Ray};
 
 pub struct Sphere {
     center: Point3,
