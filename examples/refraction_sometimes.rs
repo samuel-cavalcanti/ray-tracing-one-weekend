@@ -97,5 +97,5 @@ fn main() {
     }
     progress_bar.finish_with_message("done");
 
-    imgbuf.save("images/refraction.png").unwrap();
+    imgbuf.save("images/refraction_sometimes.png").unwrap();
 }
