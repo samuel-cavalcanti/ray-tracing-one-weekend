@@ -85,3 +85,21 @@ cargo r --release --example=diffuse_sphere_with_hemispherical_scattering
 |Lambertian sphere| diffuse sphere with hemispherical scattering|
 :-------------------------:|:-------:|
 ![ Lambertian sphere](images/lambertian_shpere.png) | ![diffuse spheres with hemispherical scattering](images/diffuse_sphere_with_hemispherical_scattering.png)
+
+## Metal
+
+Rendering shiny metal
+
+```bash
+cargo r --release --example=shiny_metal
+```
+
+Rendering  fuzzed metal
+
+```bash
+cargo r --release --example=fuzzed_metal
+```
+
+|Shiny metal| fuzzed metal|
+:-------------------------:|:-------:|
+![ Shiny metal](images/shiny_metal.png) | ![fizzed metal](images/fuzzed_metal.png)

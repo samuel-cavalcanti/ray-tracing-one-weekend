@@ -167,12 +167,16 @@ fn test_diffuse_materials()-> Result<(), image::ImageError>{
         "images/diffuse_material.png",
         "images/lambertian_shpere.png",
         "images/diffuse_sphere_with_hemispherical_scattering.png",
+        "images/shiny_metal.png",
+        "images/fuzzed_metal.png",
     ];
 
     let expected_images_path = vec![
         "images/img-1.07-first-diffuse.png",
         "images/img-1.09-correct-lambertian.png",
         "images/img-1.10-rand-hemispherical.png",
+        "images/img-1.11-metal-shiny.png",
+        "images/img-1.12-metal-fuzz.png",
     ];
 
     assert_eq!(images_path.len(), expected_images_path.len());
