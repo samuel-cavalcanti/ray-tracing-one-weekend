@@ -62,8 +62,7 @@ fn main() {
     let world = vec![
         Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, mateiral_ground),
         Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, mateiral_center),
-        Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mateiral_left.clone()),
-        Sphere::new(Point3::new(-1.0, 0.0, -1.0), -0.4, mateiral_left),
+        Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mateiral_left),
         Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, mateiral_right),
     ];
 
@@ -98,5 +97,5 @@ fn main() {
     }
     progress_bar.finish_with_message("done");
 
-    imgbuf.save("images/hollow_glass_sphere.png").unwrap();
+    imgbuf.save("images/refraction_sometimes.png").unwrap();
 }
