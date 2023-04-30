@@ -103,3 +103,13 @@ cargo r --release --example=fuzzed_metal
 |Shiny metal| fuzzed metal|
 :-------------------------:|:-------:|
 ![ Shiny metal](images/shiny_metal.png) | ![fizzed metal](images/fuzzed_metal.png)
+
+## Dielectrics
+
+|refraction| refraction_sometimes|
+:-------------------------:|:-------:|
+![ Shiny metal](images/refraction.png) | ![fizzed metal](images/refraction_sometimes.png)
+
+|A hollow glass sphere|
+:-------------------------:|
+|![A hollow glass sphere](images/hollow_glass_sphere.png)|
