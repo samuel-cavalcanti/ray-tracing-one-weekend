@@ -132,6 +132,6 @@ cargo r --release --example=fuzzed_metal
 
 ## A Final Render
 
-|A Final Render | expected |
+|A Final Render | A Final Render Book |
 |:--------------------------:|:--------:|
 |![depth of field](images/final_render.png)|![expected](https://raytracing.github.io/images/img-1.21-book1-final.jpg)

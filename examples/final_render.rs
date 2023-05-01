@@ -47,10 +47,10 @@ fn ray_color<H: Hittable>(ray: &Ray, world: &Vec<H>, depth: i32) -> Color {
 
 fn main() {
     // Image
-    let image_width = 400;
+    let image_width = 1200;
     let aspect_ratio = 3.0 / 2.0;
     let image_height = (image_width as Float / aspect_ratio) as u32;
-    let samples_per_pixel = 100.0;
+    let samples_per_pixel = 500.0;
     let depth = 50;
     let mut imgbuf = image::ImageBuffer::new(image_width, image_height);
 
@@ -59,7 +59,7 @@ fn main() {
     let world = random_scene();
 
     // Camera
-    let look_from = Point3::new(13.0, 2.0, 13.0);
+    let look_from = Point3::new(13.0, 2.0, 3.0);
     let look_at = Point3::new(0.0, 0.0, 0.0);
     let vup = Vec3::new(0.0, 1.0, 0.0);
     let dist_focos = 10.0;
