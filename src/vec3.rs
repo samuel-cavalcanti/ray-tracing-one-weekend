@@ -1,6 +1,6 @@
 use std::ops;
 
-use crate::{random_in_interval, Float};
+use crate::{random, random_in_interval, Float};
 
 #[derive(Copy, Clone)]
 pub struct Vec3 {
@@ -40,6 +40,12 @@ impl Vec3 {
             && self.slice[1].abs() < PROX_ZERO
             && self.slice[2].abs() < PROX_ZERO
     }
+
+    pub fn random() -> Vec3 {
+        Vec3 {
+            slice: [random(), random(), random()],
+        }
+    }
 }
 
 const PROX_ZERO: Float = 1e-8;
@@ -64,8 +70,7 @@ pub fn random_in_init_sphere() -> Vec3 {
     vec
 }
 
-pub fn random_in_unit_disk()->Vec3{
-
+pub fn random_in_unit_disk() -> Vec3 {
     let min = -1.0;
     let max = 1.0;
     let random_vec = || Vec3 {
@@ -78,7 +83,7 @@ pub fn random_in_unit_disk()->Vec3{
 
     let mut v = random_vec();
 
-    while v.lenght_squared() >= 1.0{
+    while v.lenght_squared() >= 1.0 {
         v = random_vec();
     }
 

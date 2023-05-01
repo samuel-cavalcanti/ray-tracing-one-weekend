@@ -130,3 +130,8 @@ cargo r --release --example=fuzzed_metal
 |:--------------------------:|:--------:|
 |![depth of field](images/spheres_with_depth_of_field.png)|![expected](https://raytracing.github.io/images/img-1.20-depth-of-field.png)
 
+## A Final Render
+
+|A Final Render | expected |
+|:--------------------------:|:--------:|
+|![depth of field](images/final_render.png)|![expected](https://raytracing.github.io/images/img-1.21-book1-final.jpg)

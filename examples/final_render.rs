@@ -1,9 +1,9 @@
 use std::rc::Rc;
 
 use ray_tracing_one_weekend::{
-    material::{Dielectric, Lambertian, Metal},
-    random, vec3, write_color_wih_gamma_correction, Camera, Color, Float, HitRecord, Hittable,
-    Point3, Ray, Sphere,  Vec3,
+    material::{Dielectric, Lambertian, Material, Metal},
+    random, random_in_interval, vec3, write_color_wih_gamma_correction, Camera, Color, Float,
+    HitRecord, Hittable, Point3, Ray, Sphere, Vec3,
 };
 
 fn hit_anything<H: Hittable>(ray: &Ray, world: &Vec<H>) -> Option<HitRecord> {
@@ -48,7 +48,7 @@ fn ray_color<H: Hittable>(ray: &Ray, world: &Vec<H>, depth: i32) -> Color {
 fn main() {
     // Image
     let image_width = 400;
-    let aspect_ratio = 16.0 / 9.0;
+    let aspect_ratio = 3.0 / 2.0;
     let image_height = (image_width as Float / aspect_ratio) as u32;
     let samples_per_pixel = 100.0;
     let depth = 50;
@@ -56,25 +56,14 @@ fn main() {
 
     // World
 
-    let mateiral_ground = Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)));
-    let mateiral_center = Rc::new(Lambertian::new(Color::new(0.1, 0.2, 0.5)));
-    let mateiral_left = Rc::new(Dielectric::new(1.5));
-    let mateiral_right = Rc::new(Metal::with_fuzzy(Color::new(0.8, 0.6, 0.2), 0.0));
-
-    let world = vec![
-        Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0, mateiral_ground),
-        Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5, mateiral_center),
-        Sphere::new(Point3::new(-1.0, 0.0, -1.0), 0.5, mateiral_left.clone()),
-        Sphere::new(Point3::new(-1.0, 0.0, -1.0), -0.45, mateiral_left),
-        Sphere::new(Point3::new(1.0, 0.0, -1.0), 0.5, mateiral_right),
-    ];
+    let world = random_scene();
 
     // Camera
-    let look_from =  Point3::new(3.0, 3.0, 2.0);
-    let look_at =  Point3::new(0.0, 0.0, -1.0);
-    let vup = Vec3::new(0.0,1.0,0.0);
-    let dist_focos = (look_from - look_at).lenght();
-    let aperture = 2.0;
+    let look_from = Point3::new(13.0, 2.0, 13.0);
+    let look_at = Point3::new(0.0, 0.0, 0.0);
+    let vup = Vec3::new(0.0, 1.0, 0.0);
+    let dist_focos = 10.0;
+    let aperture = 0.1;
 
     let camera = Camera::field_of_view(
         look_from,
@@ -83,7 +72,7 @@ fn main() {
         20.0,
         aspect_ratio,
         aperture,
-        dist_focos
+        dist_focos,
     );
 
     //render
@@ -113,5 +102,80 @@ fn main() {
     }
     progress_bar.finish_with_message("done");
 
-    imgbuf.save("images/spheres_with_depth_of_field.png").unwrap();
+    imgbuf.save("images/final_render.png").unwrap();
+}
+
+pub fn random_scene() -> Vec<Sphere> {
+    let difuse_material = || {
+        let albeto = Color::random() * Color::random();
+        Rc::new(Lambertian::new(albeto))
+    };
+
+    let metal_material = || {
+        let albeto = Color::random();
+        let fuzzy = random_in_interval(0.0, 0.5);
+
+        Rc::new(Metal::with_fuzzy(albeto, fuzzy))
+    };
+
+    let glass_material = Rc::new(Dielectric::new(1.5));
+
+    let random_choose_material = || -> Rc<dyn Material> {
+        let random_choose = random();
+        if random_choose < 0.8 {
+            difuse_material()
+        } else if random_choose < 0.95 {
+            metal_material()
+        } else {
+            glass_material.clone()
+        }
+    };
+
+    let range_a = -11..11;
+
+    let ground_material = Rc::new(Lambertian::new(Color::new(0.5, 0.5, 0.5)));
+
+    let brown = Rc::new(Lambertian::new(Color::new(0.4, 0.2, 0.1)));
+
+    let metal = Rc::new(Metal::new(Color::new(0.7, 0.6, 0.5)));
+
+    let ground_sphere = Sphere::new(Point3::new(0.0, -1000.0, 0.0), 1000.0, ground_material);
+
+    let radius = 1.0;
+    let big_glass_bal = Sphere::new(Point3::new(0.0, 1.0, 0.0), radius, glass_material.clone());
+
+    let big_brown_spehre = Sphere::new(Point3::new(-4.0, 1.0, 0.0), radius, brown);
+
+    let big_metal_sphere = Sphere::new(Point3::new(4.0, 1.0, 0.0), radius, metal);
+
+    let mut world = Vec::with_capacity(range_a.len() * range_a.len() + 1 + 3);
+
+    world.push(ground_sphere);
+    world.push(big_glass_bal);
+    world.push(big_brown_spehre);
+    world.push(big_metal_sphere);
+
+    for a in range_a {
+        for b in -11..11 {
+            let a = a as Float;
+            let b = b as Float;
+
+            let random_x = 0.9 * random();
+            let random_z = 0.9 * random();
+
+            let center = Point3::new(a + random_x, 0.2, b + random_z);
+            let p = Point3::new(4.0, 0.2, 0.0);
+
+            if (center - p).lenght() <= 0.9 {
+                continue;
+            }
+
+            let material = random_choose_material();
+            let sphere = Sphere::new(center, 0.2, material);
+
+            world.push(sphere);
+        }
+    }
+
+    world
 }

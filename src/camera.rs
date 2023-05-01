@@ -1,5 +1,6 @@
 use crate::{vec3, Float, Point3, Ray, Vec3};
 
+#[derive(Copy,Clone)]
 pub struct Camera {
     origin: Point3,
     lower_left_corner: Point3,
@@ -7,7 +8,7 @@ pub struct Camera {
     vertical: Vec3,
     u: Vec3,
     v: Vec3,
-    w: Vec3,
+    _w: Vec3,
     len_radius: Float,
 }
 
@@ -51,7 +52,7 @@ impl Camera {
             lower_left_corner,
             u,
             v,
-            w,
+            _w: w,
             len_radius: aperture / 2.0,
         }
     }
